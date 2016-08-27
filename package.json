@@ -6,9 +6,10 @@
     "react-scripts": "0.2.3"
   },
   "dependencies": {
+    "chart.js": "^2.2.2",
+    "node-static": "0.5.9",
     "react": "^15.3.1",
     "react-dom": "^15.3.1",
-    "node-static": "0.5.9",
     "sockjs": "*"
   },
   "scripts": {

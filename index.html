@@ -1,21 +1,48 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>React App</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+    <script src="https://staticfile.qnssl.com/jquery/2.0.3/jquery.min.js"></script>
+    <script src="http://cdn.jsdelivr.net/sockjs/1.0.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.2/Chart.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/immutable.js/3.8.1/immutable.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<!--
+  This HTML file is a template.
+  If you open it directly in the browser, you will see an empty page.
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+  You can add webfonts, meta tags, or analytics to this file.
+  The build step will place the bundled scripts into the <body> tag.
 
-      To begin the development, run `npm start` in this folder.
-      To create a production bundle, use `npm run build`.
-    -->
-  </body>
+  To begin the development, run `npm start` in this folder.
+  To create a production bundle, use `npm run build`.
+-->
+</body>
+
+<script>
+    var sockjs_url = 'http://localhost:9999/echo';
+    var sockjs = new SockJS(sockjs_url);
+
+    sockjs.onopen = function () {
+        print('[*] open', sockjs.protocol);
+        sockjs.send(11);
+    };
+    sockjs.onmessage = function (e) {
+        print('[.] message '+  e.data);
+    };
+    sockjs.onclose = function () {
+        print('[*] close');
+    };
+
+    function print(msg) {
+        console.log(msg);
+    }
+//    sockjs.send(11);
+
+</script>
+
 </html>

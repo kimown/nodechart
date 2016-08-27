@@ -9,9 +9,9 @@ var sockjs_opts = {sockjs_url: "http://cdn.jsdelivr.net/sockjs/1.0.1/sockjs.min.
 var sockjs_echo = sockjs.createServer(sockjs_opts);
 sockjs_echo.on('connection', function(conn) {
     conn.on('data', function(message) {
-        let i=0;
+        console.log(message);
         setInterval(()=>{
-            conn.write(message+(++i)+" from server");
+            conn.write(JSON.stringify(process.memoryUsage()));
         },1000)
     });
 });
