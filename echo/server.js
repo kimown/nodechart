@@ -7,7 +7,28 @@ var node_static = require('node-static');
 var sockjs_opts = {sockjs_url: "http://cdn.jsdelivr.net/sockjs/1.0.1/sockjs.min.js"};
 
 var sockjs_echo = sockjs.createServer(sockjs_opts);
+
+var theThing = null;
+
+
+
 sockjs_echo.on('connection', function(conn) {
+    var replaceThing = function () {
+        var originalThing = theThing;
+        var unused = function () {
+            if (originalThing)
+                console.log("hi");
+        };
+        theThing = {
+            longStr: new Array(1000000).join('*'),
+            someMethod: function () {
+                console.log(someMessage);
+            }
+        };
+    };
+    setInterval(replaceThing, 1000);
+
+
     conn.on('data', function(message) {
         console.log(message);
         setInterval(()=>{

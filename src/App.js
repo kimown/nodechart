@@ -3,29 +3,34 @@ import logo from "./logo.svg";
 import "./App.css";
 import {Line} from "react-chartjs";
 
+const CONFIG={
+    size:100
+};
+
+let ar=[];
+let i=0;
+while (ar.length<CONFIG.size){
+    ar.push(i);
+    ++i;
+}
+
 let LineChart = Line;
 
 var MyComponent = React.createClass({
     getInitialState(){
         return {
-            data:[65, 59, 80, 81, 56, 55, 40]
+            data:[]
         }
     },
 
     componentDidMount(){
-        let {data}=this.state;
-        window.setInterval(()=>{
-            data.shift();
-            data.push(Math.ceil(Math.random()*100));
-            this.setState(data);
-            console.log(this.state.data);
-        },1000)
+        this.fetchData();
     },
     render: function () {
         let {data}=this.state;
 
         var chartData = {
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
+            labels: ar,
             datasets: [
                 {
                     label: "My First dataset",
@@ -56,7 +61,49 @@ var MyComponent = React.createClass({
             animation: false
         };
         return <LineChart data={chartData} options={options} width="600" height="250"/>
+    },
+
+
+    fetchData() {
+        let self=this;
+        var sockjs_url = 'http://localhost:9999/echo';
+        var sockjs = new SockJS(sockjs_url);
+
+        sockjs.onopen = function () {
+            print('[*] open', sockjs.protocol);
+            sockjs.send(11);
+        };
+        sockjs.onmessage = function (e) {
+            print(JSON.parse(e.data));
+        };
+        sockjs.onclose = function () {
+            print('[*] close');
+        };
+
+        function print(msg) {
+            if(typeof msg=='string'){
+                console.log(msg);
+            }else{
+                console.log(msg.heapUsed);
+                const format=1024*1024; //M
+                let heapUsedAfterFormat = msg.heapUsed/format;
+                let newData= self.getNewSeq(heapUsedAfterFormat);
+                self.setState({data:newData});
+            }
+        }
+
+    },
+    getNewSeq(heapUsedAfterFormat) {
+        let {data}=this.state;
+        if(data.length<CONFIG.size){
+            data.push(heapUsedAfterFormat);
+        }else{
+            data.shift();
+            data.push(heapUsedAfterFormat);
+        }
+        return data;
     }
+
 });
 
 class App extends Component {
